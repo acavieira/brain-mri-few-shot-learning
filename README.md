@@ -38,3 +38,138 @@ The dataset is licensed under terms that allow:
 All credit for the dataset belongs to the original author.
 
 ---
+
+## Project Structure
+
+- `src/`
+  - `fsl_protonet/`
+    - `__init__.py`
+    - `config.py`
+    - `data.py`
+    - `models.py`
+    - `protonet.py`
+    - `utils.py`
+    - `engine.py`
+
+- `scripts/`
+  - `train.py`
+  - `infer_episode.py`
+
+- `data/`
+  - `train/`
+    - `glioma/`
+    - `meningioma/`
+    - `pituitary/`
+    - `no_tumor/`
+  - `test/`
+    - `glioma/`
+    - `meningioma/`
+    - `pituitary/`
+    - `no_tumor/`
+
+- `experiments/`
+- `requirements.txt`
+- `README.md`
+- `LICENSE`
+
+---
+
+## Installation
+
+Make sure you are in the root directory of the project.
+
+### 1. Create a virtual environment
+
+macOS / Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+---
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## How to Run
+
+Make sure you are in the root directory:
+
+```
+FSL_Protonet/
+```
+
+---
+
+### Train the model
+
+macOS / Linux:
+
+```bash
+PYTHONPATH=src python scripts/train.py
+```
+
+Windows PowerShell:
+
+```powershell
+$env:PYTHONPATH="src"
+python scripts/train.py
+```
+
+During training, the following experiments will be saved inside:
+
+```
+experiments/
+```
+
+- protonet_best_<timestamp>.pt  
+- protonet_last_<timestamp>.pt  
+
+---
+
+### Run Episode Inference
+
+After training:
+
+macOS / Linux:
+
+```bash
+PYTHONPATH=src python scripts/infer_episode.py --ckpt experiments/protonet_best_<timestamp>.pt
+```
+
+Windows PowerShell:
+
+```powershell
+$env:PYTHONPATH="src"
+python scripts/infer_episode.py --ckpt experiments/protonet_best_<timestamp>.pt
+```
+
+This will:
+- Load the trained model  
+- Sample a new few-shot episode  
+- Compute prototypes  
+- Classify query samples  
+- Print predicted vs true labels  
+
+---
+
+## Notes
+
+- The dataset must be organized inside `data/train` and optionally `data/test`.
+- Each class folder must contain at least `k_shot + q_query` images.
+- Default setup is 4-way 5-shot episodic training.
+
+---
